@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Logo from "../../../../public/images/logo-muji.svg";
 
 const NavbarCommon: React.FC = () => {
@@ -18,15 +19,41 @@ const NavbarCommon: React.FC = () => {
           </ul>
         </div>
         <div className="navbar-right">
-          <img
+          <Image
             className="navbar-icon"
             src="/images/search-interface-symbol.png"
-            alt=""
+            alt="Search icon"
+            width={24}
+            height={24}
           />
-          <img className="navbar-icon" src="/images/user.png" alt="" />
-          <img className="navbar-icon" src="/images/heart.png" alt="" />
-          <img className="navbar-icon" src="/images/shopping-cart.png" alt="" />
-          <img className="navbar-icon" src="/images/attention.png" alt="" />
+          <Image
+            className="navbar-icon"
+            src="/images/user.png"
+            alt="User icon"
+            width={24}
+            height={24}
+          />
+          <Image
+            className="navbar-icon"
+            src="/images/heart.png"
+            alt="Heart icon"
+            width={24}
+            height={24}
+          />
+          <Image
+            className="navbar-icon"
+            src="/images/shopping-cart.png"
+            alt="Shopping cart icon"
+            width={24}
+            height={24}
+          />
+          <Image
+            className="navbar-icon"
+            src="/images/attention.png"
+            alt="Attention icon"
+            width={24}
+            height={24}
+          />
         </div>
       </div>
     </nav>
