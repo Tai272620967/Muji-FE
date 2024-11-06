@@ -17,9 +17,20 @@
         "name": "next"
       }
     ],
+    // "baseUrl": "./",
+    // "paths": {
+    //   "@/base/*": ["*"],
+    //   "@/components/*": ["components/*"],
+    //   "@/types/*": ["types/*"],
+    // }
+    "baseUrl": "src/app", // Đặt baseUrl thành thư mục src
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/base/*": ["*"],
+      "@/components/*": ["components/*"], // Đường dẫn đến thư mục components
+      "@/types/*": ["types/*"],
+      "@/styles/*": ["styles/*"],
+      // "@/assets/*": ["assets/*"]
+    },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
