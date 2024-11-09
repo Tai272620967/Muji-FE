@@ -10,8 +10,8 @@ import ImageGallery from "./components/ImageGallery/ImageGallery";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string>("");
 
   const imageUrls = [
     "/images/banner-01.avif",
@@ -25,7 +25,7 @@ export default function Home() {
         const accessToken = localStorage.getItem("accessToken");
 
         if (!accessToken) {
-          setError("Access token is missing");
+          // setError("Access token is missing");
           return;
         }
 
@@ -39,18 +39,15 @@ export default function Home() {
         );
         setCategories(response.data.data.result);
       } catch (err) {
-        setError("Failed to fetch categories");
+        // setError("Failed to fetch categories");
         console.error(err);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
-
-  const categoryImageUrls = categories.map((category) => category.imageUrl);
-  const categoryNames = categories.map((category) => category.name);
 
   return (
     <div className={styles.page}>
