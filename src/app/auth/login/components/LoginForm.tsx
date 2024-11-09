@@ -20,7 +20,7 @@ export default function LoginForm() {
     // Thêm setTimeout để delay 2 giây trước khi gọi API
     setTimeout(async () => {
       try {
-        const response = await fetch('http://222.255.238.180/api/v1/auth/login', {
+        const response = await fetch('http://localhost:8080/api/v1/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export default function LoginForm() {
   
         const responseData = await response.json();
         setIsLoading(false);
-        localStorage.setItem('token', responseData.token);
+        localStorage.setItem('accessToken', responseData.data.access_token);
         router.push('/');
       } catch (error) {
         console.log(error);
