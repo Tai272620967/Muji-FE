@@ -3,10 +3,10 @@
 import styles from "./page.module.css";
 import NavbarCommon from "./components/Navbar/Navbar";
 import CustomCarousel from "./components/Carousel/Carousel";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { Category, CategoryResponse } from "./types/category";
+import { Category } from "./types/category";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
+import { fetchAllCategoryApi } from "./utils/api/category";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -22,22 +22,10 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-
-        if (!accessToken) {
-          // setError("Access token is missing");
-          return;
+        const response = await fetchAllCategoryApi();
+        if (response) {
+          setCategories(response.data.result);
         }
-
-        const response = await axios.get<CategoryResponse>(
-          "http://localhost:8080/api/v1/categories",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setCategories(response.data.data.result);
       } catch (err) {
         // setError("Failed to fetch categories");
         console.error(err);
@@ -72,7 +60,7 @@ export default function Home() {
         </ul>
       </div>
       <CustomCarousel images={imageUrls} />
-      <ImageGallery categories={categories}/>
+      <ImageGallery categories={categories} />
     </div>
   );
 }

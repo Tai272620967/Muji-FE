@@ -29,6 +29,7 @@
       "@/components/*": ["components/*"], // Đường dẫn đến thư mục components
       "@/types/*": ["types/*"],
       "@/styles/*": ["styles/*"],
+      "@/utils/*": ["utils/*"],
       // "@/assets/*": ["assets/*"]
     },
   },

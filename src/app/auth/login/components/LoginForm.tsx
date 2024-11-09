@@ -1,48 +1,47 @@
-'use client';
+"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from '../../../../styles/LoginForm.module.scss';
-import Logo from '../../../../../public/images/logo-muji.svg'; // Import SVG
-import FormContainer from '@/base/components/FormComponents/FormContainer';
-import InputField from '@/components/FormComponents/Input/Input'; // Import InputField
-import { Button } from '@/base/components/Button/Button';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Logo from "../../../../../public/images/logo-muji.svg"; // Import SVG
+import FormContainer from "@/base/components/FormComponents/FormContainer/FormContainer";
+import InputField from "@/components/FormComponents/Input/Input"; // Import InputField
+import { useAppDispatch } from "@/base/redux/hook";
+import { login } from "@/base/redux/features/authSlice";
+import { loginApi } from "@/base/utils/api/auth";
+import { message } from "antd";
 
 export default function LoginForm() {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined);
+  const dispatch = useAppDispatch();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined);
 
   const handleLoginSubmit = async (data: Record<string, any>) => {
-    // setError(null);
     setIsLoading(true);
-  
-    // Thêm setTimeout để delay 2 giây trước khi gọi API
-    setTimeout(async () => {
-      try {
-        const response = await fetch('http://localhost:8080/api/v1/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Login failed');
-        }
-  
-        const responseData = await response.json();
-        setIsLoading(false);
-        localStorage.setItem('accessToken', responseData.data.access_token);
-        router.push('/');
-      } catch (error) {
-        console.log(error);
-        setError('Invalid credentials');
-        setIsLoading(false);
+
+    try {
+      const responseData = await loginApi(data);
+
+      if (responseData) {
+        message.success("You have been logged in!");
       }
-    }, 1000);
-  };  
+
+      dispatch(
+        login({
+          user: responseData.data.user,
+          accessToken: responseData.data.access_token,
+        })
+      );
+
+      localStorage.setItem("accessToken", responseData.data.access_token);
+
+      router.push("/");
+    } catch (error) {
+      console.error("Login Error: ", error);
+      message.error("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="login-container">
@@ -51,21 +50,35 @@ export default function LoginForm() {
       </div>
       <h3>Login</h3>
       <div className="login-form-wrap">
-        <div className='login-form-wrap__inner'>
-          <div className='form-title'>
+        <div className="login-form-wrap__inner">
+          <div className="form-title">
             <p>For members</p>
-            <p className='form-description'>Log in with your email address and password</p>
+            <p className="form-description">
+              Log in with your email address and password
+            </p>
           </div>
-          <FormContainer onSubmit={handleLoginSubmit} className="login-form">
-            <InputField className="login-input" name="username" required placeholder='email address'/>
-            <InputField className="login-input" name="password" required type="password" placeholder='password'/>
-            <Button className="login-button mt-0" isLoading={isLoading}>{!isLoading && "Log in"}</Button>
+          <FormContainer
+            onSubmit={handleLoginSubmit}
+            isLoading={isLoading}
+            className="login-form"
+          >
+            <InputField
+              className="login-input"
+              name="username"
+              required
+              placeholder="email address"
+            />
+            <InputField
+              className="login-input"
+              name="password"
+              required
+              type="password"
+              placeholder="password"
+            />
+            {/* <Button className="login-button mt-0" isLoading={isLoading}>{!isLoading && "Log in"}</Button> */}
           </FormContainer>
         </div>
       </div>
-      {error && <div className={styles.error}>{error}</div>}
     </div>
   );
 }
-
-

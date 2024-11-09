@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Logo from "../../../../public/images/logo-muji.svg";
+import UserMenu from "../UserMenu/UserMenu";
 
 const NavbarCommon: React.FC = () => {
   return (
@@ -26,13 +27,7 @@ const NavbarCommon: React.FC = () => {
             width={24}
             height={24}
           />
-          <Image
-            className="navbar-icon"
-            src="/images/user.png"
-            alt="User icon"
-            width={24}
-            height={24}
-          />
+          <UserMenu />
           <Image
             className="navbar-icon"
             src="/images/heart.png"
