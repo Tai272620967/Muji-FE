@@ -1,19 +1,46 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import "./LoginForm.scss";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "../../../../../public/images/logo-muji.svg"; // Import SVG
-import FormContainer from "@/base/components/FormComponents/FormContainer/FormContainer";
-import InputField from "@/components/FormComponents/Input/Input"; // Import InputField
 import { useAppDispatch } from "@/base/redux/hook";
 import { login } from "@/base/redux/features/authSlice";
 import { loginApi } from "@/base/utils/api/auth";
 import { message } from "antd";
+import { useForm } from "react-hook-form";
+import { Button } from "@/base/components/Button/Button";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InputField from "@/base/components/Input/Input";
+import { AUTH_MESSAGES, SUCCESS_MESSAGES,VALIDATE_MESSAGES } from "@/base/utils/constant/constant";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined);
+
+  const yupSchema = yup.object().shape({
+    username: yup
+      .string()
+      .email(VALIDATE_MESSAGES.VALID_EMAIL)
+      .required(VALIDATE_MESSAGES.EMAIL_REQUIRED),
+    password: yup.string().required(VALIDATE_MESSAGES.PASSWORD_REQUIRED),
+  });
+
+  const defaultValues = {
+    username: "",
+    password: "",
+  };
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    resolver: yupResolver(yupSchema),
+    defaultValues,
+  });
 
   const handleLoginSubmit = async (data: Record<string, any>) => {
     setIsLoading(true);
@@ -22,7 +49,7 @@ export default function LoginForm() {
       const responseData = await loginApi(data);
 
       if (responseData) {
-        message.success("You have been logged in!");
+        message.success(SUCCESS_MESSAGES.LOGIN_SUCCESS);
       }
 
       dispatch(
@@ -37,48 +64,74 @@ export default function LoginForm() {
       router.push("/");
     } catch (error) {
       console.error("Login Error: ", error);
-      message.error("Login failed. Please try again.");
+      message.error(AUTH_MESSAGES.INVALID_EMAIL_OR_PASSWORD);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleRedirect = () => {
+    router.push("/auth/registration/mailaddress");
+  };
+
   return (
-    <div className="login-container">
+    <form
+      className="login-container"
+      onSubmit={handleSubmit(handleLoginSubmit)}
+    >
       <div className="logo">
         <Logo />
       </div>
-      <h3>Login</h3>
-      <div className="login-form-wrap">
-        <div className="login-form-wrap__inner">
-          <div className="form-title">
-            <p>For members</p>
-            <p className="form-description">
-              Log in with your email address and password
+      <h3>ログイン</h3>
+      <div className="login-form__wrapper">
+        <div className="login-form__wrap__inner">
+          <div className="login-form__content">
+            <p className="login-form__content__title">会員の方</p>
+            <p className="login-form__content__text">
+              メールアドレスとパスワードでログイン
             </p>
-          </div>
-          <FormContainer
-            onSubmit={handleLoginSubmit}
-            isLoading={isLoading}
-            className="login-form"
-          >
             <InputField
               className="login-input"
               name="username"
-              required
-              placeholder="email address"
+              register={register}
+              errors={errors}
+              placeHolder="メールアドレス"
             />
             <InputField
               className="login-input"
               name="password"
-              required
+              register={register}
+              errors={errors}
               type="password"
-              placeholder="password"
+              placeHolder="パスワード"
             />
-            {/* <Button className="login-button mt-0" isLoading={isLoading}>{!isLoading && "Log in"}</Button> */}
-          </FormContainer>
+            <div className="login-form-button__wrapper">
+              <Button className="login-form__button mt-0" isLoading={isLoading}>
+                {!isLoading && "ログイン"}
+              </Button>
+            </div>
+            <div className="login-form__forget-pw-button">
+              <a href="#">パスワードを忘れたら</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <div className="login-form__wrapper redirect-registration-page">
+        <div className="login-form__wrapper__inner">
+          <div className="login-form__content">
+            <p className="login-form__content__title">新規会員登録</p>
+            <div className="login-form-button__wrapper">
+              <Button
+                className="redirect-registration__button mt-0"
+                type="button"
+                onClick={handleRedirect}
+              >
+                新規メンバー登録
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   );
 }

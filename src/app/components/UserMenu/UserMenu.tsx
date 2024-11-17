@@ -4,6 +4,7 @@ import {
   SettingOutlined,
   UserOutlined,
   LogoutOutlined,
+  LoginOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
@@ -16,6 +17,7 @@ import { logoutApi } from "@/base/utils/api/auth";
 
 const UserMenu: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -35,7 +37,7 @@ const UserMenu: React.FC = () => {
     }
   };
 
-  const items: MenuProps["items"] = [
+  const authenticatedItems: MenuProps["items"] = [
     {
       key: "1",
       label: user?.name || "My Account",
@@ -70,6 +72,23 @@ const UserMenu: React.FC = () => {
       onClick: handleLogout,
     },
   ];
+
+  const guestItems: MenuProps["items"] = [
+    {
+      key: "1",
+      label: "新規会員登録",
+      icon: <UserOutlined />,
+      onClick: () => router.push("/auth/registration/mailaddress"),
+    },
+    {
+      key: "2",
+      label: "ログイン",
+      icon: <LoginOutlined />,
+      onClick: () => router.push("/auth/login"),
+    },
+  ];
+
+  const items = isAuthenticated ? authenticatedItems : guestItems;
 
   return (
     <Dropdown menu={{ items }} trigger={["hover"]}>

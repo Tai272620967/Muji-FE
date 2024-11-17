@@ -29,3 +29,17 @@ export const logoutApi = async () => {
     console.error("Logout API error:", error);
   }
 };
+
+export const registerAccountApi = async (data: Record<string, any>) => {
+  try {
+    const response = await axiosInstance.post("/users/register", data)
+
+    if (response.status === 201) {
+      return response.data;
+    }
+
+    throw new Error("Register account fail");
+  } catch (error) {
+    console.log("Register Account Api fail:", error);
+  }
+}
