@@ -23,7 +23,8 @@ const UserMenu: React.FC = () => {
   const router = useRouter();
 
   const fetchUserInfo = async () => {
-    if (!authStorage.getAccessToken) {
+    if (!authStorage.getAccessToken()) {
+      console.log("not call api user me")
       return;
     }
 

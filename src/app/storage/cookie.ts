@@ -1,6 +1,8 @@
 import { addDays } from 'date-fns';
 import Cookies from 'universal-cookie';
 
+import { getCurrentHostname } from "@/utils/index";
+
 const cookiesInstance = new Cookies();
 
 const defaultExpires = (days: number): Date => {
@@ -10,28 +12,25 @@ const defaultExpires = (days: number): Date => {
 };
 
 const set = (key: string, value: string, expires: Date = defaultExpires(1)) => {
-  const name = process.env.NODE_ENV === 'production' ? `__Host-${key}` : key;
-  cookiesInstance.set(name, value, {
+  const hostname = getCurrentHostname();
+  cookiesInstance.set(key, value, {
+    domain: hostname,
     path: '/',
     expires,
-    secure: true,
-    sameSite: 'strict',
   });
 };
 
 const get = (key: string) => {
-  const name = process.env.NODE_ENV === 'production' ? `__Host-${key}` : key;
-  return cookiesInstance.get(name);
+  return cookiesInstance.get(key);
 };
 
 const remove = (key: string) => {
-  const name = process.env.NODE_ENV === 'production' ? `__Host-${key}` : key;
-  return cookiesInstance.remove(name);
+  return cookiesInstance.remove(key);
 };
 
 const clearCookieData = (key: string) => {
-  const name = process.env.NODE_ENV === 'production' ? `__Host-${key}` : key;
-  cookiesInstance.remove(name, { path: '/', secure: true, expires: new Date(0) });
+  const hostname = getCurrentHostname();
+  cookiesInstance.remove(key, { domain: hostname, path: '/' });
 };
 
 const Cookie = {

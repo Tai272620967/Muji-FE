@@ -83,7 +83,7 @@ export default function LoginForm() {
       <div className="logo">
         <Logo />
       </div>
-      <h3>ログイン</h3>
+      <h4>ログイン</h4>
       <div className="login-form__wrapper">
         <div className="login-form__wrap__inner">
           <div className="login-form__content">
