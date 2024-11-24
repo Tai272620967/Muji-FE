@@ -1,4 +1,5 @@
 import axios from 'axios';
+import authStorage from '../storage/auth';
 
 // Create axios instance
 const axiosInstance = axios.create({
@@ -12,8 +13,8 @@ const axiosInstance = axios.create({
 // Add an interceptor to attach the token to every request
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Get the access token from localStorage, Redux, or cookies
-    const accessToken = localStorage.getItem('accessToken'); // Or use Redux to fetch the token
+    // Get the access token from cookies
+    const accessToken = authStorage.getAccessToken();
 
     // If there is an access token, attach it to the request headers
     if (accessToken) {

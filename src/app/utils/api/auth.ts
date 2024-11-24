@@ -21,7 +21,7 @@ export const logoutApi = async () => {
     const response = await axiosInstance.post("/auth/logout");
 
     if (response.status === 200) {
-        return response.data;
+      return response.data;
     }
 
     throw new Error("Logout failed");
@@ -32,7 +32,7 @@ export const logoutApi = async () => {
 
 export const registerAccountApi = async (data: Record<string, any>) => {
   try {
-    const response = await axiosInstance.post("/users/register", data)
+    const response = await axiosInstance.post("/users/register", data);
 
     if (response.status === 201) {
       return response.data;
@@ -41,5 +41,19 @@ export const registerAccountApi = async (data: Record<string, any>) => {
     throw new Error("Register account fail");
   } catch (error) {
     console.log("Register Account Api fail:", error);
+  }
+};
+
+export const getLoggedAccountApi = async () => {
+  try {
+    const response = await axiosInstance.get("/auth/account");
+
+    if (response.status === 200) {
+      return response.data;
+    }
+
+    throw new Error("Get logged account fail");
+  } catch (error) {
+    console.log("Get Logged Account Api fail:", error);
   }
 }

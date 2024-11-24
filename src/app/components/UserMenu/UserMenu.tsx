@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SettingOutlined,
   UserOutlined,
@@ -11,9 +11,10 @@ import { Dropdown } from "antd";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/base/redux/hook";
 import { useRouter } from "next/navigation";
-import { logout } from "@/base/redux/features/authSlice";
+import { logout, setLoggedAccount } from "@/base/redux/features/authSlice";
 import { message } from "antd";
-import { logoutApi } from "@/base/utils/api/auth";
+import { getLoggedAccountApi, logoutApi } from "@/base/utils/api/auth";
+import authStorage from "@/base/storage/auth";
 
 const UserMenu: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -21,12 +22,38 @@ const UserMenu: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const fetchUserInfo = async () => {
+    if (!authStorage.getAccessToken) {
+      return;
+    }
+
+    try {
+      const userData = await getLoggedAccountApi();
+
+      if (userData) {
+        dispatch(
+          setLoggedAccount({
+            user: userData.data.user,
+            accessToken: "",
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
   const handleLogout = async () => {
     try {
       const responseData = await logoutApi();
 
       if (responseData) {
         message.success("You have been logged out!");
+        authStorage.clearAuthCookieData();
         dispatch(logout());
       }
 

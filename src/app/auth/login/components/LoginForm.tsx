@@ -14,6 +14,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputField from "@/base/components/Input/Input";
 import { AUTH_MESSAGES, SUCCESS_MESSAGES,VALIDATE_MESSAGES } from "@/base/utils/constant/constant";
+import authStorage from "@/base/storage/auth";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
@@ -59,7 +60,7 @@ export default function LoginForm() {
         })
       );
 
-      localStorage.setItem("accessToken", responseData.data.access_token);
+      authStorage.setAccessToken(responseData.data.access_token);
 
       router.push("/");
     } catch (error) {

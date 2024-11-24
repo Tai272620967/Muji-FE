@@ -74,63 +74,66 @@ body {
   }
 }
 
-.navbar-wrapper {
-  width: 100%;
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background-color: #fff;
-}
+// .navbar-wrapper {
+//   width: 100%;
+//   border-top: 1px solid #e5e5e5;
+//   border-bottom: 1px solid #e5e5e5;
+//   position: sticky;
+//   top: 0;
+//   z-index: 1000;
+//   background-color: #fff;
+// }
 
-.navbar-container {
-  .navbar-logo {
-    // width: 5%;
-    // width: fit-content;
-    margin: auto;
-    padding: 15px;
-  }
-  width: 90%;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  margin: 0 auto;
-  //   border-top: 1px solid #e5e5e5;
-  //   border-bottom: 1px solid #e5e5e5;
-  margin: 0 auto;
+// .navbar-container {
+//   .navbar-logo {
+//     // width: 5%;
+//     // width: fit-content;
+//     margin: auto;
+//     padding: 15px;
+//     cursor: pointer;
+//   }
+//   width: 90%;
+//   height: 80px;
+//   display: flex;
+//   justify-content: center;
+//   margin: 0 auto;
+//   //   border-top: 1px solid #e5e5e5;
+//   //   border-bottom: 1px solid #e5e5e5;
+//   margin: 0 auto;
 
-  .navbar-center {
-    width: 70%;
-    display: flex;
-    // justify-content: center;
-    align-items: center;
-    ul {
-      width: 50%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0px;
-      padding-left: 0px;
-      li {
-        list-style-type: none;
-        font-weight: 500;
-      }
-    }
-  }
+//   .navbar-center {
+//     width: 70%;
+//     display: flex;
+//     // justify-content: center;
+//     align-items: center;
+//     ul {
+//       width: 60%;
+//       display: flex;
+//       justify-content: space-between;
+//       align-items: center;
+//       margin-bottom: 0px;
+//       padding-left: 0px;
+//       margin-left: 50px;
+//       li {
+//         list-style-type: none;
+//         font-weight: 500;
+//         cursor: pointer;
+//       }
+//     }
+//   }
 
-  .navbar-right {
-    width: 20%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .navbar-icon {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-  }
-}
+//   .navbar-right {
+//     width: 20%;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     .navbar-icon {
+//       width: 20px;
+//       height: 20px;
+//       cursor: pointer;
+//     }
+//   }
+// }
 
 .article-contents {
   color: #333;

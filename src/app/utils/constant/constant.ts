@@ -29,3 +29,10 @@ export const VALIDATE_MESSAGES = {
   POSTAL_CODE_REQUIRED: "郵便番号を入力してください",
   CONFIRM_PASSWORD_IS_NOT_MATCHED: "パスワードが一致しません",
 }
+
+export const COOKIE_KEY = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+  NETWORK_Error: 'networkError',
+  IS_LOGGED_IN: 'isLoggedIn',
+};

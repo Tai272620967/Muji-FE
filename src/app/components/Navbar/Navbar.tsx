@@ -1,22 +1,98 @@
+"use client";
+import "./Navbar.scss";
 import Image from "next/image";
 import Logo from "../../../../public/images/logo-muji.svg";
 import UserMenu from "../UserMenu/UserMenu";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Category } from "@/base/types/category";
+import { fetchAllMainCategoryApi } from "@/base/utils/api/category";
+import CategoryModal from "./CategoryModal/CategoryModal";
 
-const NavbarCommon: React.FC = () => {
+interface NavbarProps {
+  subCategories?: Category[];
+}
+
+const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
+  // console.log("subCategories", subCategories)
+  const [mainCategoryId, setMainCategoryId] = useState<number | null>(null);
+  const [mainCategories, setMainCategories] = useState<Category[]>([]);
+  const [subCategoriesData, setSubCategoriesData] = useState<Category[]>([]);
+  const [subCategoriesDataFilter, setSubCategoriesDataFilter] = useState<
+    Category[]
+  >([]);
+  const [isShowCategoryModal, setIsShowCategoryModal] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (subCategories) {
+      setSubCategoriesData(subCategories);
+    }
+  }, []);
+
+  const handleChangeMainCategory = (mainCategoryId: number) => {
+    setSubCategoriesDataFilter(
+      subCategoriesData?.filter(
+        (category) => category.parentId === mainCategoryId
+      ) || []
+    );
+  };
+
+  useEffect(() => {
+    const fetchAllMainCategories = async () => {
+      try {
+        const response = await fetchAllMainCategoryApi();
+        if (response) {
+          setMainCategories(response.data.result);
+        }
+      } catch (err) {
+        // setError("Failed to fetch categories");
+        console.error(err);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchAllMainCategories();
+  }, []);
+
+  const handleShowCategoryModal = (id: number) => {
+    if (id === mainCategoryId) {
+      // Nếu ID category hiện tại giống ID đang chọn, tắt modal
+      setIsShowCategoryModal(false);
+      setMainCategoryId(null);
+      setSubCategoriesDataFilter([]);
+    } else {
+      // Nếu ID khác, hiển thị modal với nội dung mới
+      setIsShowCategoryModal(true);
+      setMainCategoryId(id);
+      handleChangeMainCategory(id);
+    }
+  };
+
+  const handleCloseCategoryModal = () => {
+    setIsShowCategoryModal(false);
+  };
+
   return (
     <nav className="navbar-wrapper">
       <div className="navbar-container">
-        <div className="navbar-logo">
+        <Link href={"/"} className="navbar-logo">
           <Logo />
-        </div>
+        </Link>
         <div className="navbar-center">
           <ul>
-            <li>婦人服</li>
-            <li>紳士服</li>
-            <li>こども服</li>
-            <li>生活雑貨</li>
-            <li>家具・収納・家電</li>
-            <li>食品</li>
+            {mainCategories.map((category) => (
+              <li
+                key={category.id}
+                onClick={() => handleShowCategoryModal(category.id)}
+                className={
+                  mainCategoryId === category.id ? "selected-category" : ""
+                }
+              >
+                {category.name}
+              </li>
+            ))}
           </ul>
         </div>
         <div className="navbar-right">
@@ -51,6 +127,16 @@ const NavbarCommon: React.FC = () => {
           />
         </div>
       </div>
+      {isShowCategoryModal && (
+        <div className="category-modal__wrapper">
+          {isShowCategoryModal && (
+            <CategoryModal
+              categories={subCategoriesDataFilter}
+              handleCloseModal={handleCloseCategoryModal}
+            />
+          )}
+        </div>
+      )}
     </nav>
   );
 };

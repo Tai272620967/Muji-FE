@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -16,9 +16,14 @@ export default function CheckVerifyCode() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [emailValue, setEmailValue] = useState<string | null>(() => {
-    return localStorage.getItem("email");
-  });
+  const [emailValue, setEmailValue] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) {
+      setEmailValue(storedEmail);
+    }
+  }, []);
 
   const yupSchema = yup.object().shape({
     verifyCode: yup.string().required(VALIDATE_MESSAGES.FIELD_REQUIRED),
@@ -40,6 +45,7 @@ export default function CheckVerifyCode() {
 
   const handleVerifyOtpCode = async (data: Record<string, any>) => {
     setIsLoading(true);
+    data.email = emailValue;
 
     try {
       const responseData = await verifyOtpCodeApi(data);

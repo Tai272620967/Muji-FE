@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -16,9 +16,11 @@ export default function RegisterAccount() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [emailValue, setEmailValue] = useState<string | null>(() => {
-    return localStorage.getItem("email");
-  });
+  const [emailValue, setEmailValue] = useState<string | null>("");
+
+  useEffect(() => {
+    setEmailValue(localStorage.getItem("email"));
+  }, []);
 
   const yupSchema = yup.object().shape({
     password: yup.string().required(VALIDATE_MESSAGES.FIELD_REQUIRED),
