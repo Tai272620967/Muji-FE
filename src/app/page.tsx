@@ -5,11 +5,12 @@ import CustomCarousel from "./components/Carousel/Carousel";
 import { useEffect, useState } from "react";
 import { Category } from "./types/category";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
-import { fetchAllSubCategoryApi } from "./utils/api/category";
+import {
+  fetchSubCategoriesApi,
+} from "./utils/api/category";
 
 export default function Home() {
-  
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [subCategories, setSubCategories] = useState<Category[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string>("");
 
@@ -20,14 +21,15 @@ export default function Home() {
   ];
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchSubCategories = async () => {
       try {
-        const response = await fetchAllSubCategoryApi();
+        const response = await fetchSubCategoriesApi();
         if (response) {
-          // console.log("response", response);
-          setCategories(response.data.result.filter((category) => {
-            return category.imageUrl !== "";
-          }));
+          setSubCategories(
+            response.data.result.filter((category) => {
+              return category.imageUrl !== null;
+            })
+          );
         }
       } catch (err) {
         // setError("Failed to fetch categories");
@@ -37,7 +39,7 @@ export default function Home() {
       }
     };
 
-    fetchCategories();
+    fetchSubCategories();
   }, []);
 
   return (
@@ -53,7 +55,7 @@ export default function Home() {
         </ul>
       </div>
       <CustomCarousel images={imageUrls} />
-      <ImageGallery categories={categories} />
+      <ImageGallery subCategories={subCategories} />
     </div>
   );
 }

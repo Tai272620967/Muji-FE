@@ -1,13 +1,49 @@
+export interface MainCategory {
+  id: number;
+  name: string;
+  imageUrl: string;
+}
+
+export interface SubCategory {
+  parentId: number;
+  id: number;
+  name: string;
+  imageUrl: string;
+  mainCategory: MainCategory;
+}
+
+export interface SubCategoryResponse {
+  data: {
+    result: SubCategory[];
+  };
+}
+
+export interface SubCategoryRes {
+  data: SubCategory;
+}
+
 export interface Category {
-    parentId: number;
-    id: number;
-    name: string;
-    imageUrl: string;
-  }
-  
-  export interface CategoryResponse {
-    data: {
-      result: Category[];
-    };
-  }
-  
+  parentId: number;
+  id: number;
+  name: string;
+  imageUrl: string;
+  mainCategory: MainCategory;
+}
+
+
+export interface CategoryRes {
+  data: Category;
+}
+
+export interface CategoryResponse {
+  data: {
+    result: Category[];
+  };
+}
+
+export interface ListCategory {
+  data: Category[]
+}
+
+
+

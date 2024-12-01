@@ -2,10 +2,9 @@
   &__wrapper {
     position: absolute;
     top: 80px;
-    // border: 1px solid black;
     background-color: #fff;
-    width: 100%;
-    height: 88vh;
+    width: 100vw;
+    height: 95vh;
     z-index: 120;
     margin: 0 auto;
     animation: modalSlideIn 0.3s ease-in-out forwards;
@@ -14,10 +13,11 @@
   &__container {
     width: 90%;
     margin: 0 auto;
-    // border: 1px solid black;
     display: flex;
     justify-content: space-between;
     padding: 50px;
+    max-height: 86vh;
+    overflow-y: scroll;
   }
 
   &__left {
@@ -33,7 +33,7 @@
         line-height: 1.5;
         margin-bottom: 11px;
         padding: 5px;
-        transition: background-color .3s ease;
+        transition: background-color 0.3s ease;
       }
     }
   }
@@ -44,31 +44,34 @@
     flex-direction: column;
     border-left: 1px solid #e2e2e2;
     padding-left: 30px;
+    height: 85vh;
 
     &__box {
-        &__menu-title {
-            font-size: 15px;
-            font-weight: bold;
+      margin-bottom: 20px;
+      &__menu-title {
+        font-size: 15px;
+        font-weight: bold;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+          font-size: 14px;
+          font-weight: 400;
+          color: rgb(60, 60, 67);
+          line-height: 1.5;
+          margin-bottom: 11px;
+          padding: 5px;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            li {
-                font-size: 14px;
-                font-weight: 400;
-                color: rgb(60, 60, 67);
-                line-height: 1.5;
-                margin-bottom: 11px;
-                padding: 5px;
-            }
-        }
+      }
     }
   }
-  
+
   &__close-modal-button {
+    margin-top: -30px;
     .navbar-icon {
-        cursor: pointer;
+      cursor: pointer;
     }
   }
 }

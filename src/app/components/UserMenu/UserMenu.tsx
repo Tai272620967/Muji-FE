@@ -24,7 +24,6 @@ const UserMenu: React.FC = () => {
 
   const fetchUserInfo = async () => {
     if (!authStorage.getAccessToken()) {
-      console.log("not call api user me")
       return;
     }
 

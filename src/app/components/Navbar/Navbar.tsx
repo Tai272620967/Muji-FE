@@ -5,12 +5,12 @@ import Logo from "../../../../public/images/logo-muji.svg";
 import UserMenu from "../UserMenu/UserMenu";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Category } from "@/base/types/category";
+import { Category, SubCategory } from "@/base/types/category";
 import { fetchAllMainCategoryApi } from "@/base/utils/api/category";
 import CategoryModal from "./CategoryModal/CategoryModal";
 
 interface NavbarProps {
-  subCategories?: Category[];
+  subCategories?: SubCategory[];
 }
 
 const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
@@ -33,7 +33,7 @@ const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
   const handleChangeMainCategory = (mainCategoryId: number) => {
     setSubCategoriesDataFilter(
       subCategoriesData?.filter(
-        (category) => category.parentId === mainCategoryId
+        (category) => category.mainCategory?.id === mainCategoryId
       ) || []
     );
   };
@@ -67,17 +67,20 @@ const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
       setIsShowCategoryModal(true);
       setMainCategoryId(id);
       handleChangeMainCategory(id);
+      document.body.style.overflow = 'hidden'; // Khóa cuộn trang
     }
   };
 
   const handleCloseCategoryModal = () => {
     setIsShowCategoryModal(false);
+    setMainCategoryId(null);
+    document.body.style.overflow = ''; // Khôi phục cuộn trang
   };
 
   return (
     <nav className="navbar-wrapper">
       <div className="navbar-container">
-        <Link href={"/"} className="navbar-logo">
+        <Link href={"/"} className="navbar-logo" onClick={handleCloseCategoryModal}>
           <Logo />
         </Link>
         <div className="navbar-center">

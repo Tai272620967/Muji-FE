@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import { Providers } from "./provider";
 import NavbarCommon from "./components/Navbar/Navbar";
-import { fetchAllSubCategoryApi } from "./utils/api/category";
+import {
+  fetchSubCategoriesApi,
+} from "./utils/api/category";
+import Footer from "./components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,10 +17,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const subCategories = await fetchSubCategoriesApi();
 
-  const subCategories = await fetchAllSubCategoryApi();
-  // console.log("subCategories", subCategories);
-  
   return (
     <html lang="en">
       <body>
@@ -31,8 +32,9 @@ export default async function RootLayout({
             </span>
             <span className="header-text__right">配送料無料</span>
           </div>
-          <NavbarCommon subCategories={subCategories.data.result}/>
+          <NavbarCommon subCategories={subCategories.data.result} />
           <main>{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>

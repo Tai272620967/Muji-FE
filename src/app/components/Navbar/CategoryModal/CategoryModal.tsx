@@ -2,6 +2,7 @@
 import { Category } from "@/base/types/category";
 import "./CategoryModal.scss";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface CategoryModalProps {
   categories?: Category[];
@@ -19,7 +20,15 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   categories = [],
   handleCloseModal,
 }) => {
+  const router = useRouter();
   const leftCategories = divideCategories(categories, 3);
+
+  const handleCategoryClick = (category: Category) => {
+    router.push(`/product/category/${category.id}`);
+    if (handleCloseModal) {
+      handleCloseModal();
+    }
+  };
 
   return (
     <div className="category-modal__container">
@@ -27,7 +36,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
         {leftCategories.map((chunk, index) => (
           <ul key={index}>
             {chunk.map((category, idx) => (
-              <li key={idx}>{category.name}</li>
+              <li key={idx} onClick={() => handleCategoryClick(category)}>{category.name}</li>
             ))}
           </ul>
         ))}
@@ -63,6 +72,14 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           <p className="category-modal__right__box__menu-title">カタログ</p>
           <ul>
             <li>収納・家具・家電・ファブリック</li>
+          </ul>
+        </div>
+        <div className="category-modal__right__box">
+          <ul>
+            <li>店舗を探す</li>
+            <li>ネットストアの便利なサービス</li>
+            <li>良品計画について</li>
+            <li>無印良品の募金券</li>
           </ul>
         </div>
       </div>
