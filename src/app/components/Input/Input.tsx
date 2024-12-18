@@ -12,6 +12,8 @@ interface InputFieldProps {
   isCustomLabel?: boolean;
   // maxLength?: number;
   type?: string;
+  value?: any;
+  onChange?: any;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -25,10 +27,11 @@ const InputField: React.FC<InputFieldProps> = ({
   isCustomLabel,
   // maxLength,
   type,
+  value,
 }) => {
   return (
     <div className={`input-field ${isCustom ? "input-field--custom": ""}`}>
-      <label htmlFor={name} className={`input-field__label ${isCustomLabel ? "custom" : ""}`}>{label}</label>
+      {label && <label htmlFor={name} className={`input-field__label ${isCustomLabel ? "custom" : ""}`}>{label}</label>}
       <input
         {...register(name)}
         id={name}
@@ -36,6 +39,7 @@ const InputField: React.FC<InputFieldProps> = ({
         placeholder={placeHolder}
         // maxlength={maxLength}
         type={type}
+        value={value}
       />
         {errors?.[name] && (
           <p

@@ -8,7 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import styles from "./ImageGallery.module.css";
-import { Category, SubCategory } from "@/base/types/category";
+import { SubCategory } from "@/base/types/category";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 
@@ -19,8 +19,8 @@ interface ImageGalleryProps {
 const ImageGallery: React.FC<ImageGalleryProps> = ({ subCategories }) => {
   const router = useRouter();
 
-  const handleCategoryClick = (category: Category) => {
-    router.push(`/product/category/${category.id}`);
+  const handleCategoryClick = (subCategory: SubCategory) => {
+    router.push(`/product/subCategory/${subCategory.id}`);
   };
 
   return (
@@ -46,11 +46,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ subCategories }) => {
       }}
       className={styles.swiperContainer}
     >
-      {subCategories.map((category, index) => (
+      {subCategories.map((subCategory, index) => (
         <SwiperSlide key={index}>
-          <Link href={`/product/category/${category.id}`} className={styles.imageWrapper}>
+          <Link href={`/product/subCategory/${subCategory.id}`} className={styles.imageWrapper}>
             <Image
-              src={category?.imageUrl}
+              src={subCategory?.imageUrl}
               alt={`Slide ${index}`}
               width={250}
               height={250}
@@ -63,7 +63,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ subCategories }) => {
               }}
             />
           </Link>
-          <p className="image-name" onClick={() => handleCategoryClick(category)}>{category.name}</p>
+          <p className="image-name" onClick={() => handleCategoryClick(subCategory)}>{subCategory.name}</p>
         </SwiperSlide>
       ))}
     </Swiper>

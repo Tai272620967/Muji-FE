@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import type { DrawerProps, RadioChangeEvent } from "antd";
-import { Button, Drawer, Radio, Space } from "antd";
+import type { DrawerProps } from "antd";
+import { Drawer, Space } from "antd";
 import { Category, SubCategory } from "@/base/types/category";
 import "./CategorySelectionModal.scss";
 import Image from "next/image";
 import { fetchCategoriesBySubCategoryIdApi } from "@/base/utils/api/category";
+import { useRouter } from "next/navigation";
 
 interface CategorySelectionModalProps {
   subCategory?: SubCategory;
@@ -13,12 +14,12 @@ interface CategorySelectionModalProps {
 }
 
 const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
-  subCategory,
   subCategoryId,
 }) => {
   const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState<DrawerProps["placement"]>("left");
+  const [placement] = useState<DrawerProps["placement"]>("left");
   const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
 
   const fetchCategories = async () => {
     try {
@@ -42,9 +43,9 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
     setOpen(false);
   };
 
-  const onChange = (e: RadioChangeEvent) => {
-    setPlacement(e.target.value);
-  };
+  // const onChange = (e: RadioChangeEvent) => {
+  //   setPlacement(e.target.value);
+  // };
 
   return (
     <div className="product__filter-button-wrapper">
@@ -56,8 +57,8 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
             width="16"
             height="16"
             fill="none"
-            stroke-linecap="round"
-            stroke-width="1.5"
+            strokeLinecap="round"
+            strokeWidth="1.5"
             stroke="#3C3C43"
           >
             <path d="M2 8h12M8 14V2"></path>
@@ -84,8 +85,8 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
                 width="20"
                 height="20"
                 fill="none"
-                stroke-linecap="round"
-                stroke-width="1.5"
+                strokeLinecap="round"
+                strokeWidth="1.5"
                 stroke="#3C3C43"
               >
                 <path d="M2 17.556 17.556 2M2 2l15.556 15.556"></path>
@@ -109,7 +110,11 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
           </span>
         </div>
         {categories.map((category, index) => (
-          <div className="category-selection__row" key={index}>
+          <div
+            className="category-selection__row"
+            key={index}
+            onClick={() => router.push(`/product/category/${category.id}`)}
+          >
             <div className="category-selection__row__image">
               <Image
                 src={category?.imageUrl}

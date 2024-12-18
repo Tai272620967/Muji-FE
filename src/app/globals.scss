@@ -292,7 +292,7 @@ body {
 .check-verify-code {
   &__message {
     font-size: 12px;
-    color: rgba(0, 0, 0, .65);
+    color: rgba(0, 0, 0, 0.65);
   }
   &__button {
     background: #fff;
@@ -326,7 +326,6 @@ body {
 .registration-button-wrapper--mt-large {
   padding-top: 35px !important;
 }
-
 
 .input-field--custom {
   align-items: flex-start !important;
@@ -441,4 +440,53 @@ body {
   //   box-sizing: border-box;
   //   box-sizing: border-box;
   // }
+}
+
+// .custom-message {
+//   background-color: #3c3c42 !important;
+//   color: #fff !important;
+//   width: 200px;
+//   margin: 0 auto;
+//   border-radius: 5px;
+// }
+
+// .ant-message {
+//   background-color: #3c3c42; /* Màu nền */
+//   color: #fff; /* Màu chữ */
+//   border-radius: 8px;
+//   padding: 16px;
+// }
+
+.ant-message-notice-content {
+  background-color: #3c3c42 !important;
+  color: #fff !important;
+}
+
+.dashboard-layout {
+  display: flex;
+
+  &__main {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+  }
+}
+
+.error-message {
+  &__upload-image {
+    color: #7f0019;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  &__category {
+    color: #7f0019;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  &__description {
+    color: #7f0019;
+    font-size: 12px;
+    margin-top: 5px;
+  }
 }

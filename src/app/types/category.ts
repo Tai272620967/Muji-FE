@@ -18,6 +18,10 @@ export interface SubCategoryResponse {
   };
 }
 
+export interface SubCategoriesByMainCategoryId {
+  data: SubCategory[]
+}
+
 export interface SubCategoryRes {
   data: SubCategory;
 }
@@ -27,6 +31,7 @@ export interface Category {
   id: number;
   name: string;
   imageUrl: string;
+  subCategory: SubCategory;
   mainCategory: MainCategory;
 }
 

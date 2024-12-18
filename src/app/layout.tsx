@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.scss";
 import { Providers } from "./provider";
 import NavbarCommon from "./components/Navbar/Navbar";
-import {
-  fetchSubCategoriesApi,
-} from "./utils/api/category";
+import { fetchSubCategoriesApi } from "./utils/api/category";
 import Footer from "./components/Footer/Footer";
+import SideBar from "./dashboard/components/SideBar/SideBar";
+import HeaderDashboard from "./dashboard/components/Header/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,6 +19,27 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const subCategories = await fetchSubCategoriesApi();
+  // Lấy header để kiểm tra trang admin
+  const isAdmin = headers().get("x-is-admin") === "true";
+  console.log("isAdmin", isAdmin);
+
+  if (isAdmin) {
+    return (
+      <html lang="en">
+        <body>
+          <Providers>
+            <div className="dashboard-layout">
+              <SideBar />
+              <main className="dashboard-layout__main">
+                <HeaderDashboard />
+                {children}
+              </main>
+            </div>
+          </Providers>
+        </body>
+      </html>
+    );
+  }
 
   return (
     <html lang="en">

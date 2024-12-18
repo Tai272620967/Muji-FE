@@ -40,10 +40,12 @@
 // store.ts
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from './features/authSlice';
+import cartReducer from './features/cartSlice';
 
 // Kết hợp các reducers
 const rootReducer = combineReducers({
   user: userReducer,
+  cart: cartReducer,
 });
 
 // Tạo `store` mà không cần sử dụng `redux-persist`

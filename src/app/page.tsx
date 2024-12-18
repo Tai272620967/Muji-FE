@@ -1,18 +1,17 @@
 "use client";
 
 import styles from "./page.module.css";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Thêm dòng này để sử dụng Bootstrap
 import CustomCarousel from "./components/Carousel/Carousel";
 import { useEffect, useState } from "react";
-import { Category } from "./types/category";
+import { SubCategory } from "./types/category";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import {
   fetchSubCategoriesApi,
 } from "./utils/api/category";
 
 export default function Home() {
-  const [subCategories, setSubCategories] = useState<Category[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string>("");
+  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
 
   const imageUrls = [
     "/images/banner-01.avif",

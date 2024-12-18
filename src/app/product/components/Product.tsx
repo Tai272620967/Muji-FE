@@ -3,16 +3,29 @@ import { useEffect, useState } from "react";
 import "./Product.scss";
 import Image from "next/image";
 import { Product } from "@/base/types/Product";
-import { fetchProductsBySubCategoryId } from "@/base/utils/api/product";
+import { fetchProductsByCategoryId, fetchProductsBySubCategoryId } from "@/base/utils/api/product";
 import { useParams } from "next/navigation";
-import { Category } from "@/base/types/category";
-import { fetchSubCategoryByIdApi } from "@/base/utils/api/category";
+import { Category, SubCategory } from "@/base/types/category";
+import {
+  fetchCategoryById,
+  fetchSubCategoryByIdApi,
+} from "@/base/utils/api/category";
 import { useRouter } from "next/navigation";
 import CategorySelectionModal from "./CategorySelectionModal";
+import { convertToNumberFormat } from "@/base/utils";
 
-const ProductList: React.FC = () => {
+interface ProductListProps {
+  isRenderedByCategory?: boolean;
+  isRenderedBySubCategory?: boolean;
+}
+
+const ProductList: React.FC<ProductListProps> = ({
+  isRenderedByCategory,
+  isRenderedBySubCategory,
+}) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [subCategory, setSubCategory] = useState<Category | null>(null);
+  const [subCategory, setSubCategory] = useState<SubCategory | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [size] = useState(4);
@@ -22,10 +35,19 @@ const ProductList: React.FC = () => {
   useEffect(() => {
     const fetchSubCategory = async () => {
       try {
-        const response = await fetchSubCategoryByIdApi(categoryId);
-        if (response) {
-          console.log("response", response);
-          setSubCategory(response);
+        if (isRenderedBySubCategory) {
+          const response = await fetchSubCategoryByIdApi(categoryId);
+          if (response) {
+            setSubCategory(response);
+          }
+        }
+
+        if (isRenderedByCategory) {
+          const response = await fetchCategoryById(categoryId);
+
+          if (response) {
+            setCategory(response);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -42,12 +64,28 @@ const ProductList: React.FC = () => {
 
       setLoading(true);
       try {
-        // const response = await fetchAllProductApi();
-        const response = await fetchProductsBySubCategoryId(categoryId, page, size); // Lấy 4 sản phẩm mỗi lần
-        if (response) {
-          // console.log("response", response)
-          // Thêm các sản phẩm mới vào danh sách cũ
-          setProducts((prev) => [...prev, ...response.data.result]);
+        if (isRenderedBySubCategory) {
+          const response = await fetchProductsBySubCategoryId(
+            categoryId,
+            page,
+            size
+          ); // Lấy 4 sản phẩm mỗi lần
+          if (response) {
+            // Thêm các sản phẩm mới vào danh sách cũ
+            setProducts((prev) => [...prev, ...response.data.result]);
+          }
+        }
+
+        if (isRenderedByCategory) {
+          const response = await fetchProductsByCategoryId(
+            categoryId,
+            page,
+            size
+          );
+          if (response) {
+            // Thêm các sản phẩm mới vào danh sách cũ
+            setProducts((prev) => [...prev, ...response.data.result]);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -74,9 +112,11 @@ const ProductList: React.FC = () => {
 
   // Xử lý khi người dùng kéo xuống dưới cùng của trang (lazy load)
   const handleScroll = () => {
-    const bottom = window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight;
+    const bottom =
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight;
     if (bottom && !loading) {
-      setPage(prev => prev + 1); // Tăng trang để lấy thêm sản phẩm
+      setPage((prev) => prev + 1); // Tăng trang để lấy thêm sản phẩm
     }
   };
 
@@ -108,7 +148,13 @@ const ProductList: React.FC = () => {
             </svg>
           </li>
           <li className="product__bread-crumbs__list__item">
-            <a href="">{subCategory?.mainCategory.name}</a>
+            {(isRenderedBySubCategory || isRenderedByCategory) && (
+              <a href="">
+                {isRenderedBySubCategory
+                  ? subCategory?.mainCategory.name
+                  : category?.subCategory?.mainCategory.name}
+              </a>
+            )}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -121,12 +167,39 @@ const ProductList: React.FC = () => {
             </svg>
           </li>
           <li className="product__bread-crumbs__list__item">
-            <a href="">{subCategory?.name}</a>
+            {(isRenderedBySubCategory || isRenderedByCategory) && (
+              <a href="">
+                {isRenderedBySubCategory
+                  ? subCategory?.name
+                  : category?.subCategory.name}
+              </a>
+            )}
+            {isRenderedByCategory && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="#D8D8D9"
+                className="product__bread-crumbs__list__item__icon"
+              >
+                <path d="m6 13 5-5-5-5"></path>
+              </svg>
+            )}
           </li>
+          {isRenderedByCategory && (
+            <li className="product__bread-crumbs__list__item">
+              {isRenderedByCategory && <a href="">{category?.name}</a>}
+            </li>
+          )}
         </ul>
       </div>
       <div className="product__title__wrapper">
-        <h1 className="product__title">家具</h1>
+        {(isRenderedBySubCategory || isRenderedByCategory) && (
+          <h1 className="product__title">
+            {isRenderedBySubCategory ? subCategory?.name : category?.name}
+          </h1>
+        )}
       </div>
       <div className="product__sub-title__wrapper">
         <h2 className="product__sub-title">ピックアップ</h2>
@@ -156,18 +229,24 @@ const ProductList: React.FC = () => {
         </div>
       </div>
       <div className="product__filter__wrapper">
-        <CategorySelectionModal subCategoryId={categoryId}/>
+        <CategorySelectionModal subCategoryId={categoryId} />
       </div>
       <div className="product__list__wrapper">
         {productChunks.map((productChunk, index) => (
           <div className="product__list__table" key={index}>
             <div className="product__list">
               {productChunk.map((product, index) => (
-                <div className={`product__list__inner${index !== productChunk.length - 1 ? "-wrapper" : ""}`} key={index}>
+                <div
+                  className={`product__list__inner${
+                    index !== productChunk.length - 1 ? "-wrapper" : ""
+                  }`}
+                  key={index}
+                  onClick={() => router.push(`/product/detail/${product.id}`)}
+                >
                   <div className="product__list__item">
                     <div className="product__list__item__image">
                       <Image
-                        src={product.imageUrl}
+                        src={process.env.NEXT_PUBLIC_API_BASE_URI + product.imageUrl}
                         alt="Search icon"
                         width={320}
                         height={320}
@@ -181,7 +260,7 @@ const ProductList: React.FC = () => {
                         <div className="product__list__item__desc__price">
                           <span className="product__list__item__desc__price__value">
                             <span className="product__list__item__desc__price__value__number">
-                              {product.minPrice}
+                              {convertToNumberFormat(product.minPrice)}
                             </span>
                             <span className="product__list__item__desc__price__value__unit">
                               円
@@ -196,7 +275,7 @@ const ProductList: React.FC = () => {
                             {product.maxPrice && (
                               <>
                                 <span className="product__list__item__desc__price__value__number">
-                                  {product.maxPrice}
+                                  {convertToNumberFormat(product.maxPrice)}
                                 </span>
                                 <span className="product__list__item__desc__price__value__unit">
                                   円
@@ -234,9 +313,9 @@ const ProductList: React.FC = () => {
         ))}
       </div>
       {/* Thêm phần loading nếu cần */}
-      <div className="loader__wrapper">
+      {/* <div className="loader__wrapper">
         {loading && <div className="loader"></div>}
-      </div>
+      </div> */}
     </div>
   );
 };

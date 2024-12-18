@@ -66,5 +66,23 @@
       height: 20px;
       cursor: pointer;
     }
+
+    .cartIcon-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-top: 4px;
+      cursor: pointer;
+    }
+
+    .cartIcon-itemCount {
+      font-size: 10px;
+      font-weight: 700;
+      position: absolute;
+      top: -6px;
+      left: 1px;
+      text-align: center;
+      width: 20px;
+    }
   }
 }

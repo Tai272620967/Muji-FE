@@ -8,6 +8,11 @@ import { useEffect, useState } from "react";
 import { Category, SubCategory } from "@/base/types/category";
 import { fetchAllMainCategoryApi } from "@/base/utils/api/category";
 import CategoryModal from "./CategoryModal/CategoryModal";
+import { useAppDispatch, useAppSelector } from "@/base/redux/hook";
+import { cartTotalQuantityApi } from "@/base/utils/api/cart";
+import authStorage from "@/base/storage/auth";
+import { setTotalQuantity } from "@/base/redux/features/cartSlice";
+import { useRouter } from "next/navigation";
 
 interface NavbarProps {
   subCategories?: SubCategory[];
@@ -17,16 +22,37 @@ const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
   // console.log("subCategories", subCategories)
   const [mainCategoryId, setMainCategoryId] = useState<number | null>(null);
   const [mainCategories, setMainCategories] = useState<Category[]>([]);
-  const [subCategoriesData, setSubCategoriesData] = useState<Category[]>([]);
+  const [subCategoriesData, setSubCategoriesData] = useState<SubCategory[]>([]);
   const [subCategoriesDataFilter, setSubCategoriesDataFilter] = useState<
-    Category[]
+    SubCategory[]
   >([]);
+  const router = useRouter();
+
+  const cart = useAppSelector((state) => state.cart);
+
+  const dispatch = useAppDispatch();
+
   const [isShowCategoryModal, setIsShowCategoryModal] =
     useState<boolean>(false);
 
   useEffect(() => {
     if (subCategories) {
       setSubCategoriesData(subCategories);
+    }
+
+    const fetchCartTotalQuantity = async () => {
+      try {
+        const cartTotalQuantityRes = await cartTotalQuantityApi();
+        if (cartTotalQuantityRes) {
+          dispatch(setTotalQuantity({ totalQuantity: cartTotalQuantityRes.data.totalQuantity }));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (authStorage.getAccessToken()) {
+      fetchCartTotalQuantity();
     }
   }, []);
 
@@ -67,20 +93,24 @@ const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
       setIsShowCategoryModal(true);
       setMainCategoryId(id);
       handleChangeMainCategory(id);
-      document.body.style.overflow = 'hidden'; // Khóa cuộn trang
+      document.body.style.overflow = "hidden"; // Khóa cuộn trang
     }
   };
 
   const handleCloseCategoryModal = () => {
     setIsShowCategoryModal(false);
     setMainCategoryId(null);
-    document.body.style.overflow = ''; // Khôi phục cuộn trang
+    document.body.style.overflow = ""; // Khôi phục cuộn trang
   };
 
   return (
     <nav className="navbar-wrapper">
       <div className="navbar-container">
-        <Link href={"/"} className="navbar-logo" onClick={handleCloseCategoryModal}>
+        <Link
+          href={"/"}
+          className="navbar-logo"
+          onClick={handleCloseCategoryModal}
+        >
           <Logo />
         </Link>
         <div className="navbar-center">
@@ -114,13 +144,27 @@ const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
             width={24}
             height={24}
           />
-          <Image
-            className="navbar-icon"
-            src="/images/shopping-cart.png"
-            alt="Shopping cart icon"
-            width={24}
-            height={24}
-          />
+          <div className="cartIcon-wrapper" onClick={() => router.push("/cart")}>
+            <span className="cartIcon-itemCount">{cart?.totalQuantity}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="16"
+              fill="none"
+            >
+              <path
+                stroke="#3C3C43"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="1.5"
+                d="M1 .972h1.838c.075 0 .15.062.162.137l1.336 8.567c0 .075.075.137.163.137H17.5a.16.16 0 0 0 .162-.137l1.586-8.305"
+              ></path>
+              <path
+                fill="#3C3C43"
+                d="M6.732 15.307a2.035 2.035 0 1 0 0-4.07 2.035 2.035 0 0 0 0 4.07ZM15.273 15.307a2.035 2.035 0 1 0 0-4.07 2.035 2.035 0 0 0 0 4.07Z"
+              ></path>
+            </svg>
+          </div>
           <Image
             className="navbar-icon"
             src="/images/attention.png"

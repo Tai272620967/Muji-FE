@@ -15,6 +15,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import InputField from "@/base/components/Input/Input";
 import { AUTH_MESSAGES, SUCCESS_MESSAGES,VALIDATE_MESSAGES } from "@/base/utils/constant/constant";
 import authStorage from "@/base/storage/auth";
+import { cartTotalQuantityApi } from "@/base/utils/api/cart";
+import { setTotalQuantity } from "@/base/redux/features/cartSlice";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
@@ -43,6 +45,19 @@ export default function LoginForm() {
     defaultValues,
   });
 
+  const fetchCartTotalQuantity = async () => {
+    try {
+      const cartTotalQuantityRes = await cartTotalQuantityApi();
+      console.log("cartTotalQuantityRes", cartTotalQuantityRes.data.totalQuantity);
+      if (cartTotalQuantityRes) {
+        // setCartTotalQuantity(cartTotalQuantityRes.data.totalQuantity);
+        dispatch(setTotalQuantity({ totalQuantity: cartTotalQuantityRes.data.totalQuantity }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleLoginSubmit = async (data: Record<string, any>) => {
     setIsLoading(true);
 
@@ -51,6 +66,7 @@ export default function LoginForm() {
 
       if (responseData) {
         message.success(SUCCESS_MESSAGES.LOGIN_SUCCESS);
+        fetchCartTotalQuantity();
       }
 
       dispatch(

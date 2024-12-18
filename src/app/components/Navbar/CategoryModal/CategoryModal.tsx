@@ -1,15 +1,15 @@
 "use client";
-import { Category } from "@/base/types/category";
+import { SubCategory } from "@/base/types/category";
 import "./CategoryModal.scss";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface CategoryModalProps {
-  categories?: Category[];
+  categories?: SubCategory[];
   handleCloseModal?: () => void;
 }
 
-const divideCategories = (categories: Category[], parts: number) => {
+const divideCategories = (categories: SubCategory[], parts: number) => {
   const chunkSize = Math.ceil(categories.length / parts);
   return Array.from({ length: parts }, (_, i) =>
     categories.slice(i * chunkSize, (i + 1) * chunkSize)
@@ -23,8 +23,8 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   const router = useRouter();
   const leftCategories = divideCategories(categories, 3);
 
-  const handleCategoryClick = (category: Category) => {
-    router.push(`/product/category/${category.id}`);
+  const handleCategoryClick = (category: SubCategory) => {
+    router.push(`/product/subCategory/${category.id}`);
     if (handleCloseModal) {
       handleCloseModal();
     }

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Category,
   CategoryRes,
   CategoryResponse,
   ListCategory,
-  SubCategory,
+  SubCategoriesByMainCategoryId,
   SubCategoryRes,
   SubCategoryResponse,
 } from "@/base/types/category";
 import axiosInstance from "@/utils/axiosConfig";
+
 /* Main Category Api */
 export const fetchAllMainCategoryApi = async () => {
   try {
@@ -62,6 +62,18 @@ export const fetchSubCategoryByIdApi = async (id: string) => {
   }
 };
 
+export const fetchSubCategoriesByMainCategoryIdApi = async (id: string) => {
+  try {
+    const response = await axiosInstance.get<SubCategoriesByMainCategoryId>(
+      `/sub-categories/main-category/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("fetch subCategories by main-category id API error:", error);
+    throw error;
+  }
+};
+
 /* Category Api */
 export const fetchCategoryById = async (id: string) => {
   try {
@@ -80,7 +92,9 @@ export const fetchCategoryById = async (id: string) => {
 
 export const fetchCategoriesBySubCategoryIdApi = async (id: string) => {
   try {
-    const response = await axiosInstance.get<ListCategory>(`/categories/sub-category/${id}`);
+    const response = await axiosInstance.get<ListCategory>(
+      `/categories/sub-category/${id}`
+    );
 
     if (response.status === 200) {
       return response.data.data;
@@ -91,4 +105,4 @@ export const fetchCategoriesBySubCategoryIdApi = async (id: string) => {
     console.error("fetch categories by sub-category id API error:", error);
     throw error;
   }
-}
+};

@@ -1,5 +1,5 @@
 import Product from "../../components/Product";
 
 export default function ProductListPage() {
-  return <Product />;
+  return <Product isRenderedByCategory />;
 }

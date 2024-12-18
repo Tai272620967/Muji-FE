@@ -15,6 +15,7 @@ import { logout, setLoggedAccount } from "@/base/redux/features/authSlice";
 import { message } from "antd";
 import { getLoggedAccountApi, logoutApi } from "@/base/utils/api/auth";
 import authStorage from "@/base/storage/auth";
+import { setTotalQuantity } from "@/base/redux/features/cartSlice";
 
 const UserMenu: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -55,6 +56,7 @@ const UserMenu: React.FC = () => {
         message.success("You have been logged out!");
         authStorage.clearAuthCookieData();
         dispatch(logout());
+        dispatch(setTotalQuantity({ totalQuantity: 0 }));
       }
 
       router.push("/auth/login");
