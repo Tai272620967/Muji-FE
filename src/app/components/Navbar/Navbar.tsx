@@ -46,6 +46,8 @@ const NavbarCommon: React.FC<NavbarProps> = () => {
         console.error(error);
       }
     }
+
+    fetchSubCategories();
     // if (subCategories) {
     //   setSubCategoriesData(subCategories);
     // }
