@@ -6,7 +6,7 @@ import UserMenu from "../UserMenu/UserMenu";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Category, SubCategory } from "@/base/types/category";
-import { fetchAllMainCategoryApi } from "@/base/utils/api/category";
+import { fetchAllMainCategoryApi, fetchSubCategoriesApi } from "@/base/utils/api/category";
 import CategoryModal from "./CategoryModal/CategoryModal";
 import { useAppDispatch, useAppSelector } from "@/base/redux/hook";
 import { cartTotalQuantityApi } from "@/base/utils/api/cart";
@@ -36,9 +36,19 @@ const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
     useState<boolean>(false);
 
   useEffect(() => {
-    if (subCategories) {
-      setSubCategoriesData(subCategories);
+    const fetchSubCategories = async () => {
+      const response = await fetchSubCategoriesApi();
+      try {
+        if (response) {
+          setSubCategoriesData(response.data.result);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
+    // if (subCategories) {
+    //   setSubCategoriesData(subCategories);
+    // }
 
     const fetchCartTotalQuantity = async () => {
       try {
