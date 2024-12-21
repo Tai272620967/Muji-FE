@@ -93,7 +93,7 @@ export default function RegisterAccount() {
   };  
 
   const handleRegisterAccount = async (data: Record<string, any>) => {
-    console.log("data", data);
+    data.email = localStorage.getItem("email");
     setIsLoading(true);
 
     try {
