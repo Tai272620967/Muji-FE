@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import "./globals.scss";
 import { Providers } from "./provider";
 import NavbarCommon from "./components/Navbar/Navbar";
-import { fetchSubCategoriesApi } from "./utils/api/category";
+// import { fetchSubCategoriesApi } from "./utils/api/category";
 import Footer from "./components/Footer/Footer";
 import SideBar from "./dashboard/components/SideBar/SideBar";
 import HeaderDashboard from "./dashboard/components/Header/Header";
