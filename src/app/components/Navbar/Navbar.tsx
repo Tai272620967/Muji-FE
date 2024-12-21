@@ -18,7 +18,7 @@ interface NavbarProps {
   subCategories?: SubCategory[];
 }
 
-const NavbarCommon: React.FC<NavbarProps> = ({ subCategories }) => {
+const NavbarCommon: React.FC<NavbarProps> = () => {
   // console.log("subCategories", subCategories)
   const [mainCategoryId, setMainCategoryId] = useState<number | null>(null);
   const [mainCategories, setMainCategories] = useState<Category[]>([]);
