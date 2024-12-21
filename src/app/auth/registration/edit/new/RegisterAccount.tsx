@@ -19,7 +19,10 @@ export default function RegisterAccount() {
   const [emailValue, setEmailValue] = useState<string | null>("");
 
   useEffect(() => {
-    setEmailValue(localStorage.getItem("email"));
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) {
+      setEmailValue(storedEmail);
+    }
   }, []);
 
   const yupSchema = yup.object().shape({
